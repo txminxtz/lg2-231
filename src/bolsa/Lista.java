@@ -9,11 +9,13 @@ package bolsa;
  */
 public class Lista {
 
+    private String tipo;
     private No primeiro;
     private No ultimo;
     private int qt;
 
-    public Lista(){
+    public Lista(String sTipo){
+        tipo = sTipo;
         primeiro = null;
         ultimo = null;
         qt = 0;
@@ -30,7 +32,6 @@ public class Lista {
     public No getUltimo() {
         return ultimo;
     }
-
 
     public void inserirPrimeiro(Elemento elemento, String sIndexador) {
 
@@ -56,6 +57,7 @@ public class Lista {
 
         primeiro.setAnterior(novoNo);
         primeiro = novoNo;
+
         qt = qt + 1;
     }
 
@@ -107,7 +109,9 @@ public class Lista {
             atual = atual.getProximo();
         }
 
+        atual.getProximo().setAnterior(novoNo);
         novoNo.setProximo(atual.getProximo());
+        novoNo.setAnterior(atual);
         atual.setProximo(novoNo);
 
         qt++;
@@ -127,7 +131,6 @@ public class Lista {
             return;
         }
 
-        //if (indexador >= ultimo.getIndexador())
         if (sIndexador.compareTo(ultimo.getIndexador()) >= 0)
         {
             this.inserirNoFinal(elemento,  sIndexador);
@@ -143,22 +146,49 @@ public class Lista {
             atual = atual.getProximo();
         }
 
+        atual.getProximo().setAnterior(novoNo);
         novoNo.setProximo(atual.getProximo());
+        novoNo.setAnterior(atual);
         atual.setProximo(novoNo);
 
         qt++;
 
     }
 
+    public void removeNo(No no) {
 
-    public void removerNoInicio() {
+        No no_anterior, no_proximo;
+
+        if (no == primeiro) {
+            removePrimeiroNo();
+            return;
+        }
+
+        if (no == ultimo) {
+            removeUltimoNo();
+            return;
+        }
+
+        no_anterior = no.getAnterior();
+        no_proximo = no.getProximo();
+
+        no_anterior.setProximo(no_proximo);
+        no_proximo.setAnterior(no_anterior);
+
+        qt--;
+
+    }
+
+
+    public void removePrimeiroNo() {
 
         if(qt == 0) {
             return;
         }
 
         primeiro = primeiro.getProximo();
-        primeiro.setAnterior(null);
+        if (primeiro != null) primeiro.setAnterior(null);
+
         qt--;
 
         if(qt == 0) {
@@ -166,14 +196,14 @@ public class Lista {
         }
     }
 
-    public void removerNoFim() {
+    public void removeUltimoNo() {
 
         if(qt == 0) {
             return;
         }
 
         ultimo = ultimo.getAnterior();
-        ultimo.setProximo(null);
+        if (ultimo != null) ultimo.setProximo(null);
         qt--;
 
         if(qt == 0) {
@@ -210,107 +240,101 @@ public class Lista {
         return elementos.toString();
     }
 
-    public void exibeComponentes(int iTab) {
+    public void exibeComponentes(int iTab, boolean bCrescente) {
 
-        No no = this.getPrimeiro();
+        No no;
+
+        if (this.qt == 0) {
+            System.out.println("Nao ha Registro de "+this.tipo+".");
+            return;
+        }
+
+        if (bCrescente )    no = this.getPrimeiro();
+        else                no = this.getUltimo();
+
+        int iNivel = 1;
 
         while (no != null){
 
-            no.getElemento().mostraDados(iTab);
+            if (iNivel > 0) no.getElemento().mostraCabecalho(iTab);
 
-            no = no.getProximo();
+            iNivel = no.getElemento().mostraDados(iTab);
+
+            if (bCrescente)    no = no.getProximo();
+            else                no = no.getAnterior();
 
         }
         
     }    
 
-    public Elemento pesquisaElemento(String sCod) {
+    public No procuraNo( 
+        String sIndexador,
+        String sTipo	// > Maior; < Menor; <> Indiferente
+        ) {
 
-        Elemento elemento;
+        No no_atual;
 
-        No no = this.getPrimeiro();
+        String sAux;
+        int iTam;
 
-        while (no != null){
+        sAux = "<>";
 
-            elemento = no.getElemento();
+        if (!sAux.contains(sTipo)) return null;
 
-            //if (sCod.compareTo(elemento.getCod())==0) return elemento;
-            if (sCod.equalsIgnoreCase(elemento.getCod())) return elemento;
+        iTam = sIndexador.length();
 
-            /* 
-            System.out.print("");
-            System.out.print(sCod + ", " + elemento.getCod() );
-            System.out.print(" " + sCod.compareTo(elemento.getCod()));
-            System.out.print(" ");
-            System.out.print(sCod == elemento.getCod());
-            */
+        if (sTipo==">") no_atual = this.ultimo;
+        else            no_atual = this.primeiro;
 
-            no = no.getProximo();
+        while (no_atual!=null) {                
+            
+            sAux = no_atual.getIndexador();
+            sAux = sAux.substring(0,iTam);
 
-        }
-
-        return null;
-        
-    }    
-
-
-/* 
-    public void cadastro(String sTipo, Scanner l) {
-
-        String sIndexador = "";
-        //No no=null;
-        Elemento elemento = null;
-
-        if (sTipo == "Ativo"){
-
-            Ativo ativo = new Ativo();
-
-            if (! ativo.dadosInput(l)) return;
-
-            sIndexador = ativo.getNome();
-
-            elemento = ativo;
-
-            //no = new No(ativo, sIndexador);
-
-        }
-        else if (sTipo == "Corretora"){
-
-            Corretora corretora = new Corretora();
-
-            if (! corretora.dadosInput(l)) return;
-
-            sIndexador = corretora.getCod();
-
-            elemento = corretora;
-
-        }
-        else if (sTipo == "Investidor") {
-
-            Investidor investidor = new Investidor();
-
-            if (! investidor.dadosInput(l)) return;
-
-            sIndexador = investidor.getCod();
-
-            elemento = investidor;
-
-        }
-        else if (sTipo == "Investimento"){
-
-            Investimento investimento = new Investimento();
-
-            if (! investimento.dadosInput(l)) return;
-
-            sIndexador = investimento.getCod();
-
-            elemento = investimento;
+            if (sIndexador.equalsIgnoreCase(sAux))  {
+                return no_atual;   
+            }             
+            
+            if (sTipo==">") { 
+                no_atual = no_atual.getAnterior();
+            }
+            else { 
+                no_atual = no_atual.getProximo();
+            }
             
         }
 
-        this.inserirPilhaCrescente(elemento, sIndexador);
-        System.out.println(sTipo + " " + sIndexador + " Adicionado com Sucesso !");
+        return null;
 
     }
-*/
+
+    public No procuraNo_Ordem( 
+        Ordem ordem
+        ) {
+
+        No no;
+        Ordem ordemNo;
+
+        no = this.primeiro;
+
+        while (no !=null) {                
+            
+            ordemNo = (Ordem)no.getElemento();
+
+            if (ordem == ordemNo)  {
+                return no;   
+            }             
+        
+            else { 
+                no = no.getProximo();
+            }
+            
+        }
+
+        return null;
+
+    }
+
+
+
 }

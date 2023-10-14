@@ -50,21 +50,4 @@ public class No {
         this.anterior = no;
     }
 
-    /* 
-    public void mostraDados(){ 
-
-        System.out.println("\tElemento: " + this.getElemento().getCod());
-        System.out.println("\tIndexador: " + this.getIndexador());
-        System.out.println();
-
-    }
-
-    public String textInput(String label, Scanner l) {
-        System.out.println(label);
-        return l.nextLine();
-    }
-
-*/
-
-
 }

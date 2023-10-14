@@ -1,6 +1,6 @@
 package bolsa;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 
 //import java.util.List;
 //import java.util.ArrayList;
@@ -12,107 +12,171 @@ public class Main
 
 
         Bolsa bolsa = new Bolsa();
+        int i, iNivel;
+
+        iNivel = 8;
+
+        if (iNivel >= 1) {
 
         ////////////
-        /////// Lista de Ativos
+        /////// CADASTRO DE ATIVOS
 
         Lista l_Ativos = bolsa.getAtivos();
-        Ativo ativo, at_petr4, at_vale3, at_itub4, at_bbdc4;
+        Ativo ativo, at_petr4;//, at_vale3, at_itub4, at_bbdc4;
 
-        ativo = new Ativo("PETR4", "Petrobras PN", 1000, 33.40);
+        ativo = new Ativo("PETR4", "Petrobras PN");
         l_Ativos.inserirPilhaCrescente(ativo, ativo.getCod());
 
         at_petr4 = ativo;
 
-        ativo = new Ativo("VALE3", "Vale ON", 5000, 66.71);
-        l_Ativos.inserirPilhaCrescente(ativo, ativo.getCod());
-
-        at_vale3 = ativo;
-
-        ativo = new Ativo("ITUB4", "Itau PN", 1500, 13.70);
-        l_Ativos.inserirPilhaCrescente(ativo, ativo.getCod());
-
-        at_itub4 = ativo;
-
-        ativo = new Ativo("BBDC4", "Bradesco PN", 1500, 13.70);
-        l_Ativos.inserirPilhaCrescente(ativo, ativo.getCod());
-
-        at_bbdc4 = ativo;
+        if (iNivel >= 2){
 
         ////////////
-        /////// Lista de Corretoras
+        /////// CADASTRO DE CORRETORAS
 
         Lista l_Corretoras = bolsa.getCorretoras();
         Corretora corretora, cr_xp, cr_rico;
 
-        //l_Corretoras = new Lista();
+        i = 0;
 
-        corretora = new Corretora("001", "XP");
+        corretora = new Corretora(String.format("%03d", ++i), "XP");
         l_Corretoras.inserirPilhaCrescente(corretora, corretora.getCod());
 
         cr_xp = corretora;
-
-        corretora = new Corretora("002", "Rico");
+        
+        corretora = new Corretora(String.format("%03d", ++i), "Rico");
         l_Corretoras.inserirPilhaCrescente(corretora, corretora.getCod());
 
         cr_rico = corretora; 
+    
+        if (iNivel >= 3){
 
         ////////////
-        /////// Lista de Investidores
+        /////// CADASTRO DE INVESTIDORES
 
         Lista l_Investidores = bolsa.getInvestidores();
-        Investidor investidor, iv_bruno, iv_carla, iv_claudio;
+        Investidor investidor, iv_bruno, iv_claudio; // iv_carla, 
 
-        investidor = new Investidor("003", "Claudio", "003.263.877-90", cr_rico, 2000.00);
+        i = 0;
+
+        investidor = new Investidor(String.format("%03d", ++i), "Claudio", "003.263.877-90");
         l_Investidores.inserirPilhaCrescente(investidor, investidor.getCod());
 
         iv_claudio = investidor;
 
-        investidor = new Investidor("001", "Bruno", "427.266.758-08", cr_xp,  900.00);
+        investidor = new Investidor(String.format("%03d", ++i), "Bruno", "427.266.758-08");
         l_Investidores.inserirPilhaCrescente(investidor, investidor.getCod());
 
         iv_bruno = investidor;
 
-        investidor = new Investidor("002", "Carla", "212.478.638-59", cr_xp, 1500.00);
-        l_Investidores.inserirPilhaCrescente(investidor, investidor.getCod());
-
-        iv_carla = investidor;
-
+        if (iNivel >= 4){
 
         ////////////
-        /////// Lista de Investidores
+        /////// CADASTRO DE CONTAS
 
-        Lista l_Investimentos = bolsa.getInvestimentos();
+        Lista l_Contas = bolsa.getContas();
+        Conta conta, conta_xp_claudio, conta_rico_bruno; //conta_xp_carla, 
+
+        i = 0;
+        
+        conta = new Conta(String.format("%03d", ++i), cr_xp, iv_claudio, 0.00);
+        l_Contas.inserirPilhaCrescente(conta, conta.getCod());
+
+        conta_xp_claudio = conta;
+
+        conta = new Conta(String.format("%03d", ++i), cr_rico, iv_bruno, 0.00);
+        l_Contas.inserirPilhaCrescente(conta, conta.getCod());
+
+        conta_rico_bruno = conta;
+
+        if (iNivel >= 5){
+
+        ////////////
+        /////// DEPOSITO EM CONTA
+        
+        conta_rico_bruno.depositaValor(5000.00);
+        conta_xp_claudio.depositaValor(10000.00);
+        
+        if (iNivel >= 6){
+
+        ////////////
+        /////// OPA
+
+        at_petr4.addQt(20000);
+        at_petr4.setPreco(33.40); 
+        
+        if (iNivel >= 7){
+
+        ////////////
+        /////// COMPRA DE OPA
+
         Investimento investimento;
 
-        investimento = new Investimento("001", iv_carla, at_petr4 , 50, 33.50, LocalDateTime.now());
-        l_Investimentos.inserirPilhaCrescente(investimento, investimento.getCod());
+        int iQt_disponivel, iQt;
+        double dPreco, dTotal;
+        String sCod;
 
-        investimento = new Investimento("002", iv_bruno, at_vale3 , 30, 66.49, LocalDateTime.now());
-        l_Investimentos.inserirPilhaCrescente(investimento, investimento.getCod());
+        iQt = 200;
 
-        investimento = new Investimento("003", iv_bruno, at_itub4 , 15, 11.24, LocalDateTime.now());
-        l_Investimentos.inserirPilhaCrescente(investimento, investimento.getCod());
+        iQt_disponivel = at_petr4.getQt_disponivel();
+        dPreco = at_petr4.getPreco();
 
-        investimento = new Investimento("004", iv_claudio, at_bbdc4 , 30, 30.15, LocalDateTime.now());
-        l_Investimentos.inserirPilhaCrescente(investimento, investimento.getCod());
+        iQt = 200;
 
-/* 
-        System.out.println("Corretoras: "+ bolsa.getCorretoras().getQuantidade() );
-        System.out.println("Investidores: "+ bolsa.getInvestidores().getQuantidade() );
-        System.out.println("Ativos: "+ bolsa.getAtivos().getQuantidade() );
-        System.out.println("Investimentos: "+ bolsa.getInvestimentos().getQuantidade() );
-        System.out.println();
-*/
+        dTotal = iQt * dPreco;        
 
+        iQt_disponivel -= iQt;
+
+
+        i = 0;
+        sCod = String.format("%03d", ++i);
+
+        investimento = new Investimento(
+            "Investimento",
+            sCod, 
+            conta_xp_claudio, 
+            at_petr4 , 
+            iQt, 
+            dPreco);
+
+        at_petr4.getInvestimentos().inserirPilhaCrescente(investimento , sCod);
+        at_petr4.setQt_disponivel(iQt_disponivel);
+
+        conta_xp_claudio.resgataValor(dTotal);
+
+        bolsa.getInvestimentos().inserirPilhaCrescente(investimento, investimento.getCod());
+
+        if (iNivel >= 8){
+
+        ////////////
+        /////// INCLUSAO DE ORDENS
+
+        i = 0;
+
+        bolsa.cadastraOrdem(
+            "V", 
+            ++i, 
+            conta_xp_claudio, 
+            at_petr4, 
+            200,  
+            35.00);
+
+        bolsa.cadastraOrdem(
+            "C", 
+            ++i, 
+            conta_rico_bruno, 
+            at_petr4, 
+            100,  
+            33.00);
+
+        }}}}}}}}
+        
         ////////////
         /////// MENU
 
-
-        //new Menu(l_Corretoras, l_Investidores, l_Ativos, l_Investimentos);
         new Menu(bolsa);
 
-    }
-    
+    }    
+
 }
 

@@ -7,41 +7,35 @@ public class Investidor  extends Elemento {
     //private String cod;
     private String nome;
     private String cpf;
-    private Corretora corretora;
-    private Double saldo;
-    private Lista carteira;
+    private Lista contas;
+    //private Corretora corretora;
+    //private Double saldo;
+    //private Lista carteira;
 
     //public Investidor(){}
 
-    public Investidor() {}
+    //public Investidor() {}
 
-    public Investidor(String cod, String nome, String cpf, Corretora corretora, Double saldo) {
+    public Investidor(String cod, String nome, String cpf) {
 
         super("Investidor", cod);         
 
         //this.cod =  cod;
         this.nome = nome;
         this.cpf = cpf;
-        this.corretora = corretora;
-        this.saldo = saldo;
+        //this.corretora = corretora;
+        //this.saldo = saldo;
 
-        this.carteira = new Lista ();
+        this.contas = new Lista ("CONTAS");
 
-        corretora.getInvestidores().inserirPilhaCrescente(this , cod);
+        //corretora.getInvestidores().inserirPilhaCrescente(this , cod);
 
     }
 
-    /* 
 
-    public String getCod() {
-        return this.cod;
+    public Lista getContas() {
+        return this.contas;
     }
-
-    public void setCod(String cod) {
-        this.cod = cod;
-    }
-
-*/
 
     public String getNome() {
         return this.nome;
@@ -59,92 +53,104 @@ public class Investidor  extends Elemento {
         this.cpf = cpf;
     }
 
-    public Corretora getCorretora() {
-        return this.corretora;
-    }
-
-    public void setCorretora(Corretora corretora) {
-        this.corretora = corretora;
-    }
-
-    public Double getSaldo() {
-        return this.saldo;
-    }
-
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
-    }
-
-    public Lista getCarteira() {
-        return this.carteira;
-    }
-
+/* 
     @Override 
     public void mostraDados(int iTab){ 
 
         int i;
+
+        //System.out.println();
  
         for (i=1; i<=iTab; i++) System.out.print("\t");
         System.out.println("Cod: " + this.getCod());
  
         for (i=1; i<=iTab; i++) System.out.print("\t");
-        System.out.println("Nome: " + this.getNome());
+        System.out.println("Nome: " + this.nome);
  
         for (i=1; i<=iTab; i++) System.out.print("\t");
-        System.out.println("CPF: " + this.getCPF());
- 
-        for (i=1; i<=iTab; i++) System.out.print("\t");
-        System.out.println("Corretora: " + this.getCorretora().getCod());
- 
-        for (i=1; i<=iTab; i++) System.out.print("\t");
-        System.out.println("Saldo: " + this.getSaldo());
- 
-        for (i=1; i<=iTab; i++) System.out.print("\t");
-        System.out.println("Carteira: ");
+        System.out.println("CPF: " + this.cpf);
 
         System.out.println();
 
-        this.getCarteira().exibeComponentes(iTab + 1);
-
-        System.out.println();
+        for (i=1; i<=iTab; i++) System.out.print("\t");
+        System.out.println("Contas: ");
+        this.getContas().exibeComponentes(iTab + 1);
 
     }
-/* 
-    public boolean dadosInput(Scanner l){ 
 
-        String sCod, sNome, sCPF, sCorretora, sSaldo;
-        double dSaldo;
-        String sAux; 
+*/
 
-        System.out.println("Cadastro de Investidores");
 
-        sCod = textInput("Cod: ",l);
-        sNome = textInput("Nome:",l);
-        sCPF = textInput("CPF: ",l);
-        sCorretora = textInput("Corretora: ",l);
-        sSaldo = textInput("Saldo: ",l);
+    @Override 
+    public void mostraCabecalho(int iTab){ 
 
-        dSaldo = Double.parseDouble(sSaldo);
+        int i;
 
-        sAux = textInput("Adicionar Investidor (S/N) ?",l);
+        System.out.println();
 
-        if  (sAux.equalsIgnoreCase("s")==false){
-            return false;
+        for (i=1; i<=iTab; i++) System.out.print("\t");
+        System.out.println(
+            "Cod       " + " " + 
+            "Nome      " + " " + 
+            "CPF       " 
+            );
+
+        for (i=1; i<=iTab; i++) System.out.print("\t");
+        System.out.println(
+            "----------" + " " +
+            "----------" + " " +
+            "--------------"
+            );
+
+    }
+
+    @Override 
+    public int  mostraDados(int iTab){ 
+
+        int i, iTam, iNivel = 0;   
+        String sAux;     
+
+        iTam = 10;
+
+        for (i=1; i<=iTab; i++) System.out.print("\t");
+
+        // Cod
+        sAux = this.getCod();
+        sAux = this.completaString(sAux, iTam);
+        System.out.print(sAux + " ");
+
+        // Nome
+        sAux = this.getNome();
+        sAux = this.completaString(sAux, iTam);
+        System.out.print(sAux + " ");
+
+        // CPF
+        sAux = this.getCPF();
+        sAux = this.completaString(sAux, 14);
+        System.out.print(sAux + " ");
+
+        System.out.println();
+
+        iTab += 1;
+
+        if (this.getContas().getQt() > 0) {  
+                
+            System.out.println();        
+            for (i=1; i<=iTab; i++) System.out.print("\t");
+            System.out.println("Contas: ");
+            this.getContas().exibeComponentes(iTab, true);
+
+            iNivel = 1;
+
         }
 
-        //this.setIndexador(sCod);
-        
-        this.setCod(sCod);
-        this.setNome(sNome);
-        this.setCPF(sCPF);
-        this.setCorretora(sCorretora);
-        this.setSaldo(dSaldo);
+        //if (iNivel==0) System.out.println();
 
-        return true;
+        return iNivel;
 
     }
 
- */
+
 
 }
 
