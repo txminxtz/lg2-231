@@ -140,9 +140,7 @@ O programa pode ser executado a partir do arquivo Main.java, onde ja estão incl
 
 O grupo é formado pelos seguintes integrantes:
 
-- Anna Carolina
 - Bruno Taminato
 - Caio Lucas Bertaglia
 - Giovana Obeid
 - Pedro Guilherme
-- Janiely Vieira
